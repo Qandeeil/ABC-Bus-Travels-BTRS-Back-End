@@ -34,6 +34,7 @@ router.post("/newTrip", uploads, async (req, res, send) => {
       price,
       busNumber,
       flightSupervisor,
+      description,
     } = req.body;
     try {
       const newTrip = await Trips.create({
@@ -45,6 +46,7 @@ router.post("/newTrip", uploads, async (req, res, send) => {
         busNumber,
         flightSupervisor,
         logoTrips,
+        description,
       });
       res.send({ result: true });
     } catch (error) {
@@ -52,23 +54,23 @@ router.post("/newTrip", uploads, async (req, res, send) => {
     }
   } else {
     const {
-      name,
       tripDestination,
       startDate,
       endDate,
       price,
       busNumber,
       flightSupervisor,
+      description,
     } = req.body;
     try {
       const newTrip = await Trips.create({
-        name,
         tripDestination,
         startDate,
         endDate,
         price,
         busNumber,
         flightSupervisor,
+        description,
       });
       res.send({ result: true });
     } catch (error) {
@@ -76,5 +78,16 @@ router.post("/newTrip", uploads, async (req, res, send) => {
     }
   }
 });
+
+router.delete("/deleteTrip", async (req, res, next) => {
+  const { _id } = req.body;
+  console.log(_id);
+  const deleteTrip = await Trips.findByIdAndRemove(_id);
+  res.send({ result: true });
+});
+
+router.get('/resetTripFlags', async (req,res,send) => {
+    res.send(false)
+})
 
 module.exports = router;

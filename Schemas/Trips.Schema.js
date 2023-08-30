@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 // const deepPopulate = requrie('mongoose-deep-populate')(mongoose)
 
 const tripsSchema = new mongoose.Schema({
-  name: { type: String },
   tripDestination: { type: String },
   startDate: { type: Date },
   endDate: { type: Date },
@@ -16,7 +15,9 @@ const tripsSchema = new mongoose.Schema({
     },
   ],
   busNumber: { type: Number },
-  flightSupervisor: {type: String}
+  flightSupervisor: {type: String},
+  numberOfSeats: {type: Number, default: 0},
+  description: {type: String},
 });
 
 const Trips = mongoose.model("Trips", tripsSchema, "Trips");
