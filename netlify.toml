@@ -4,5 +4,5 @@
 [build.environment]
   NODE_VERSION = "18.17.1"
 
-[build.publish]
-  directory = "publicNetlify"
+[build]
+publish = "publicNetlify"
