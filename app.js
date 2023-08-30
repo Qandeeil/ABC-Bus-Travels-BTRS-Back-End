@@ -31,8 +31,6 @@ app.use("/Profile-Picture", express.static(path.join("./ProfilePicture")));
 app.use("/trips", tripsRouter);
 app.use("/LogoTrips", express.static(path.join("./LogoTrips")));
 
-app.use('/.netlify/functions/api', router)
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
