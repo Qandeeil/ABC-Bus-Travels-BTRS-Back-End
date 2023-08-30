@@ -2,3 +2,4 @@
   command = "npm start"
   environment = { NODE_VERSION = "18.17.1" }
   publish = "publicNetlify"
+  functions = "functions"
