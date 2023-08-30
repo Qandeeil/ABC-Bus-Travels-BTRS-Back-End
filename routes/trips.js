@@ -8,6 +8,10 @@ router.get("/", async function (req, res, next) {
   res.send(getTrips);
 });
 
+router.get("/resetTripFlags", async (req, res, send) => {
+  res.send(false);
+});
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./LogoTrips");
@@ -35,6 +39,7 @@ router.post("/newTrip", uploads, async (req, res, send) => {
       busNumber,
       flightSupervisor,
       description,
+      status
     } = req.body;
     try {
       const newTrip = await Trips.create({
@@ -47,10 +52,11 @@ router.post("/newTrip", uploads, async (req, res, send) => {
         flightSupervisor,
         logoTrips,
         description,
+        status
       });
       res.send({ result: true });
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" }); // الرد في حالة حدوث خطأ
+      res.status(500).json({ error: "Internal Server Error" });
     }
   } else {
     const {
@@ -61,6 +67,7 @@ router.post("/newTrip", uploads, async (req, res, send) => {
       busNumber,
       flightSupervisor,
       description,
+      status
     } = req.body;
     try {
       const newTrip = await Trips.create({
@@ -71,10 +78,11 @@ router.post("/newTrip", uploads, async (req, res, send) => {
         busNumber,
         flightSupervisor,
         description,
+        status
       });
       res.send({ result: true });
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" }); // الرد في حالة حدوث خطأ
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 });
@@ -86,8 +94,87 @@ router.delete("/deleteTrip", async (req, res, next) => {
   res.send({ result: true });
 });
 
-router.get('/resetTripFlags', async (req,res,send) => {
-    res.send(false)
-})
+router.put("/updateTrip", uploads, async (req, res, send) => {
+  const url = req.protocol + "://" + req.get("host");
+  if (req.file) {
+    const filename = req.file.filename;
+    const logoTrips = url + "/LogoTrips/" + filename;
+    const {
+      _id,
+      tripDestination,
+      startDate,
+      endDate,
+      price,
+      busNumber,
+      flightSupervisor,
+      description,
+      status
+    } = req.body;
+    try {
+      const updateTrip = await Trips.findByIdAndUpdate(_id, {
+        tripDestination,
+        startDate,
+        endDate,
+        price,
+        busNumber,
+        flightSupervisor,
+        logoTrips,
+        description,
+        status
+      });
+      res.send({ result: true });
+    } catch (error) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  } else {
+    const {
+      _id,
+      tripDestination,
+      startDate,
+      endDate,
+      price,
+      busNumber,
+      flightSupervisor,
+      description,
+      status
+    } = req.body;
+    try {
+      const updateTrip = await Trips.findByIdAndUpdate(_id, {
+        tripDestination,
+        startDate,
+        endDate,
+        price,
+        busNumber,
+        flightSupervisor,
+        description,
+        status
+      });
+      res.send({ result: true });
+    } catch (error) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+});
+
+router.put("/addUserFromTrip", async (req, res, send) => {
+  const { _id, user } = req.body;
+  console.log(req.body);
+  const AddUser = await Trips.findByIdAndUpdate(_id, {
+    $push: {
+      passengers: user._id,
+    },
+  });
+  res.send({ result: true });
+});
+
+router.put("/removeUserFromTrip", async (req, res) => {
+  const { _id, user } = req.body;
+  const updatedTrip = await Trips.findByIdAndUpdate(_id, {
+    $pull: {
+      passengers: user._id,
+    },
+  });
+  res.send({ result: true });
+});
 
 module.exports = router;
